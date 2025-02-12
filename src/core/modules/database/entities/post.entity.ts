@@ -23,7 +23,7 @@ export class PostEntity {
 
     @ManyToOne(() => UserEntity, (userEntity: UserEntity) => userEntity.posts)
     @JoinColumn()
-    user: UserEntity[];
+    user: UserEntity;
 
     @CreateDateColumn()
     createdAt: Date;

@@ -6,6 +6,8 @@ import {PassportModule} from "@nestjs/passport";
 import {JwtModule} from "@nestjs/jwt";
 import * as process from "process";
 import {JwtStrategy} from "./strategies/jwt.strategy";
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {UserEntity} from "../../core/modules/database/entities/user.entity";
 
 @Module({
     imports: [
@@ -14,7 +16,8 @@ import {JwtStrategy} from "./strategies/jwt.strategy";
         JwtModule.register({
             secret: process.env.JWT_SECRET,
             signOptions: { expiresIn: '1h' },
-        })
+        }),
+        TypeOrmModule.forFeature([UserEntity])
     ],
     controllers: [AuthController],
     providers: [AuthService, JwtStrategy],

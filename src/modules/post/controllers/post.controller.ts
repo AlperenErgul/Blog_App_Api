@@ -1,10 +1,16 @@
-import {Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
 import {ApiTags} from "@nestjs/swagger";
 import {PostService} from "../services/post.service";
 import {AuthenticatedUser, IAuthUser} from "../../auth/decorators/authanticated-user";
+import {CreatePostDto, UpdatePostDto} from "../dtos";
+import {AuthenticationGuard} from "../../auth/guards/authantication.guard";
+import {ApiPaginationQuery, Paginate, PaginateQuery} from "nestjs-paginate";
+import {POST_PAGINATION_CONFIG} from "../paginate-config/post-pagination.config";
 
-@Controller('post')
+
 @ApiTags('Post')
+@AuthenticationGuard()
+@Controller('post')
 export class PostController {
 
     constructor(
@@ -12,29 +18,33 @@ export class PostController {
     ) {
     }
 
+
     @Get()
-    async findAll() {
-        return await this.postService.findAll();
+    @ApiPaginationQuery(POST_PAGINATION_CONFIG)
+    async findAll(
+        @Paginate() query:PaginateQuery
+    ) {
+        return await this.postService.findAll(query);
     }
 
-    @Get(':id')
-    async findOne(@Param("id") id: string) {
-        return await this.postService.findOne(id);
+    @Get(':postId')
+    async findOne(@Param("postId") postId: string) {
+        return await this.postService.findOne(postId);
     }
 
     @Post()
-    async create(@AuthenticatedUser() user: IAuthUser, @Param("id") id: string) {
-        return await this.postService.create();
+    async create(@AuthenticatedUser() user: IAuthUser, @Body() payload: CreatePostDto) {
+        return await this.postService.create(user.id, payload);
     }
 
-    @Patch(':id')
-    async update(@AuthenticatedUser() user: IAuthUser, @Param("id") id: string) {
-        return await this.postService.update();
+    @Patch(':postId')
+    async update(@AuthenticatedUser() user: IAuthUser, @Param("postId") postId: string, @Body() payload: UpdatePostDto) {
+        return await this.postService.update(user.id, postId, payload);
     }
 
-    @Delete(':id')
-    async delete(@AuthenticatedUser() user: IAuthUser, @Param("id") id: string) {
-        return await this.postService.delete()
+    @Delete(':postId')
+    async delete(@AuthenticatedUser() user: IAuthUser, @Param("postId") postId: string) {
+        return await this.postService.delete(user.id, postId);
     }
 
 }
