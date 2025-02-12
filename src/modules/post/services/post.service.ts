@@ -80,7 +80,7 @@ export class PostService {
             ...updatedPost,
             user: {
                 id: updatedPost.user.id,
-                email: updatedPost.user.email, // sadece gerekli alanları döndürüyoruz
+                email: updatedPost.user.email,
             },
         };
     }
