@@ -5,6 +5,7 @@ import {RegisterDto} from "../dtos/register.dto";
 import {ApiTags} from "@nestjs/swagger";
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {Public} from "../../../core/decorators/public.decorator";
+import {AuthenticatedUser, IAuthUser} from "../decorators/authanticated-user";
 
 @Controller('auth')
 @ApiTags('Authantication')
@@ -31,6 +32,12 @@ export class AuthController {
     @Get('profile')
     getProfile(@Request() req) {
         return req.user;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('session')
+    async session(@AuthenticatedUser() user: IAuthUser) {
+        return await this.authService.session(user.id);
     }
 
 }

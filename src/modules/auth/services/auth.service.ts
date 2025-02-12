@@ -41,9 +41,9 @@ export class AuthService {
 
     }
 
-    async login(payload: LoginDto): Promise<string>{
+    async login(payload: LoginDto): Promise<string> {
         const user = await this.validateUser(payload.email, payload.password);
-        const jwtPayload = { id: user.id, email: user.email };
+        const jwtPayload = {id: user.id, email: user.email};
         const token: string = this.jwtService.sign(jwtPayload, {
             secret: this.configService.get<string>('JWT_SECRET'),
             expiresIn: this.TOKEN_EXPIRES_IN
@@ -52,9 +52,9 @@ export class AuthService {
         return token;
     }
 
-    async validateUser(email: string, password: string): Promise<UserEntity>{
+    async validateUser(email: string, password: string): Promise<UserEntity> {
         const user = await this.userService.findOneByEmail(email);
-        if (!user){
+        if (!user) {
             throw new BadRequestException('NoAccountWithThisEmail', {
                 cause: new Error(),
                 description: 'There is no account with this email'
@@ -62,7 +62,7 @@ export class AuthService {
         }
 
         const compareResult = await bcrypt.compare(password, user.password);
-        if (!compareResult){
+        if (!compareResult) {
             throw new BadRequestException('EmailOrPasswordIncorrect', {
                 cause: new Error(),
                 description: 'Email or password incorrect!'
@@ -72,6 +72,9 @@ export class AuthService {
         return user;
     }
 
+    async session(id: string) {
+        return await this.userService.findOneByPk(id);
+    }
 
 
 }
