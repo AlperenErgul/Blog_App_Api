@@ -6,6 +6,7 @@ import {ApiTags} from "@nestjs/swagger";
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {Public} from "../../../core/decorators/public.decorator";
 import {AuthenticatedUser, IAuthUser} from "../decorators/authanticated-user";
+import {AuthenticationGuard} from "../guards/authantication.guard";
 
 @Controller('auth')
 @ApiTags('Authantication')
@@ -28,13 +29,13 @@ export class AuthController {
         return await this.authService.register(payload);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @AuthenticationGuard()
     @Get('profile')
     getProfile(@Request() req) {
         return req.user;
     }
 
-    @UseGuards(JwtAuthGuard)
+    @AuthenticationGuard()
     @Get('session')
     async session(@AuthenticatedUser() user: IAuthUser) {
         return await this.authService.session(user.id);
