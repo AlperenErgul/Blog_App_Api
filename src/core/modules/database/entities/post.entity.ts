@@ -1,4 +1,13 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
+import {UserEntity} from "./user.entity";
 
 
 @Entity()
@@ -11,6 +20,10 @@ export class PostEntity {
 
     @Column()
     content: string;
+
+    @ManyToOne(() => UserEntity, (userEntity: UserEntity) => userEntity.posts)
+    @JoinColumn()
+    user: UserEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

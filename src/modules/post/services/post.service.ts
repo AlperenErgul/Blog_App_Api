@@ -6,7 +6,7 @@ export class PostService {
     constructor() {
     }
 
-    async findOne() {
+    async findOne(id: string) {
 
     }
 

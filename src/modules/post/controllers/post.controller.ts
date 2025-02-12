@@ -1,6 +1,7 @@
-import {Controller, Delete, Get, Patch, Post} from '@nestjs/common';
+import {Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
 import {ApiTags} from "@nestjs/swagger";
 import {PostService} from "../services/post.service";
+import {AuthenticatedUser, IAuthUser} from "../../auth/decorators/authanticated-user";
 
 @Controller('post')
 @ApiTags('Post')
@@ -17,22 +18,22 @@ export class PostController {
     }
 
     @Get(':id')
-    async findOne() {
-        return await this.postService.findOne();
+    async findOne(@Param("id") id: string) {
+        return await this.postService.findOne(id);
     }
 
     @Post()
-    async create() {
+    async create(@AuthenticatedUser() user: IAuthUser, @Param("id") id: string) {
         return await this.postService.create();
     }
 
     @Patch(':id')
-    async update() {
+    async update(@AuthenticatedUser() user: IAuthUser, @Param("id") id: string) {
         return await this.postService.update();
     }
 
     @Delete(':id')
-    async delete() {
+    async delete(@AuthenticatedUser() user: IAuthUser, @Param("id") id: string) {
         return await this.postService.delete()
     }
 
