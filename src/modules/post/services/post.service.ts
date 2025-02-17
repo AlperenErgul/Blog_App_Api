@@ -34,10 +34,17 @@ export class PostService {
     }
 
     async findAll(query: PaginateQuery) {
-        return await paginate(query, this.postEntity, {
+        const result = await paginate(query, this.postEntity, {
             ...POST_PAGINATION_CONFIG,
             relations: ['user']
         });
+
+        result.data = result.data.map(post => ({
+            ...post,
+            user: post.user ? { id: post.user.id, name: post.user.name, email: post.user.email } : null
+        })) as unknown as PostEntity[];
+
+        return result;
     }
 
     async create(userId: string, payload: CreatePostDto): Promise<PostEntity> {
@@ -52,13 +59,13 @@ export class PostService {
 
     async update(userId: string, postId: string, payload: UpdatePostDto) {
         const post = await this.postEntity.findOne({
-            where:{
+            where: {
                 id: postId
             },
             relations: ['user']
         });
 
-        if (!post){
+        if (!post) {
             throw new NotFoundException('PostNotFound', {
                 cause: new Error(),
                 description: 'Post not found'
@@ -76,7 +83,7 @@ export class PostService {
 
         await this.postEntity.save(updatedPost);
 
-        return  {
+        return {
             ...updatedPost,
             user: {
                 id: updatedPost.user.id,
