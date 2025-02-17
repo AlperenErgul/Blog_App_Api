@@ -6,6 +6,7 @@ import {LoginDto} from "../dtos/login.dto";
 import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
 import {UserEntity} from "../../../core/modules/database/entities/user.entity";
+import {LoginResponseInterface} from "../interfaces/login-response.interface";
 
 @Injectable()
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
 
     }
 
-    async login(payload: LoginDto): Promise<string> {
+    async login(payload: LoginDto): Promise<LoginResponseInterface> {
         const user = await this.validateUser(payload.email, payload.password);
         const jwtPayload = {id: user.id, email: user.email};
         const token: string = this.jwtService.sign(jwtPayload, {
@@ -49,7 +50,16 @@ export class AuthService {
             expiresIn: this.TOKEN_EXPIRES_IN
         });
 
-        return token;
+        let response: LoginResponseInterface = {
+            "access-token": token,
+            user:{
+                id: user.id,
+                name: user.name,
+                email: user.email
+            }
+        }
+
+        return response;
     }
 
     async validateUser(email: string, password: string): Promise<UserEntity> {

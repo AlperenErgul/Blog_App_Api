@@ -7,6 +7,7 @@ import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {Public} from "../../../core/decorators/public.decorator";
 import {AuthenticatedUser, IAuthUser} from "../decorators/authanticated-user";
 import {AuthenticationGuard} from "../guards/authantication.guard";
+import {LoginResponseInterface} from "../interfaces/login-response.interface";
 
 @Controller('auth')
 @ApiTags('Authantication')
@@ -19,7 +20,7 @@ export class AuthController {
 
     @Public()
     @Post('login')
-    async login(@Body() payload: LoginDto): Promise<string> {
+    async login(@Body() payload: LoginDto): Promise<LoginResponseInterface> {
         return await this.authService.login(payload);
     }
 
