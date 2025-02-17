@@ -9,6 +9,10 @@ async function bootstrap() {
 
     const configService: ConfigService = app.get(ConfigService);
 
+    app.enableCors({
+        origin: ['http://localhost:4200']
+    })
+
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('docs', app, swaggerDocument);
 
