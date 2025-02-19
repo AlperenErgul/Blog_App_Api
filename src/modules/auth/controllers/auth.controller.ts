@@ -26,7 +26,7 @@ export class AuthController {
 
     @Public()
     @Post('register')
-    async register(@Body() payload: RegisterDto): Promise<RegisterDto> {
+    async register(@Body() payload: RegisterDto): Promise<boolean> {
         return await this.authService.register(payload);
     }
 

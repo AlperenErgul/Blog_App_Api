@@ -20,7 +20,7 @@ export class AuthService {
     ) {
     }
 
-    async register(payload: RegisterDto): Promise<RegisterDto> {
+    async register(payload: RegisterDto): Promise<boolean> {
         const user = await this.userService.findOneByEmail(payload.email);
         if (user) {
             throw new BadRequestException('AccountAlreadyExist', {
@@ -38,7 +38,7 @@ export class AuthService {
             password: hashedPassword
         });
 
-        return payload;
+        return true;
 
     }
 
