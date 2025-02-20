@@ -37,7 +37,7 @@ export class AuthController {
 
     @AuthenticationGuard()
     @Get('session')
-    async session(@AuthenticatedUser() user: IAuthUser) {
+    async session(@AuthenticatedUser() user: IAuthUser): Promise<boolean> {
         return await this.authService.session(user.id);
     }
 

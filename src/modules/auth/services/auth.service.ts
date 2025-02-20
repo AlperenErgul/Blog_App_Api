@@ -52,7 +52,7 @@ export class AuthService {
 
         let response: LoginResponseInterface = {
             "access-token": token,
-            user:{
+            user: {
                 id: user.id,
                 name: user.name,
                 email: user.email
@@ -82,8 +82,13 @@ export class AuthService {
         return user;
     }
 
-    async session(id: string) {
-        return await this.userService.findOneByPk(id);
+    async session(id: string): Promise<boolean> {
+        try {
+            await this.userService.findOneByPk(id);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 
 
