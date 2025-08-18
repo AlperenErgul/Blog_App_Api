@@ -3,6 +3,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {UserEntity} from "../../../core/modules/database/entities/user.entity";
 import {Repository} from "typeorm";
 import {RegisterDto} from "../../auth/dtos/register.dto";
+import {UpdateProfileImageDto} from "../dtos/update-profile-image.dto";
 
 @Injectable()
 export class UserService {
@@ -31,7 +32,7 @@ export class UserService {
             where: {
                 id: id
             },
-            select:['id', 'name', 'email']
+            select: ['id', 'name', 'email', 'profileImageKey', 'profileImageUrl']
         })
 
         if (!user) {
@@ -42,6 +43,30 @@ export class UserService {
         }
 
         return user;
+    }
+
+    async updateProfileImage(userId: string, key: string, viewUrl: string): Promise<UserEntity> {
+        const user = await this.findOneByPk(userId);
+
+        const payload: UpdateProfileImageDto = {
+            profileImageKey: key,
+            profileImageUrl: viewUrl
+        }
+
+        let updatedUser = this.userEntity.merge(user, payload);
+
+        updatedUser = await this.userEntity.save(updatedUser);
+
+        return updatedUser;
+    }
+
+    async deleteProfileImage(userId: string): Promise<UserEntity> {
+        let user = await this.findOneByPk(userId);
+
+        user.profileImageKey = null;
+        user.profileImageUrl = null;
+
+        return await this.userEntity.save(user);
     }
 
 }

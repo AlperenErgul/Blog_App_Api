@@ -29,9 +29,23 @@ export class UserEntity {
     @JoinColumn()
     posts: PostEntity[];
 
+    @Column({ type: 'varchar', nullable: true })
+    profileImageKey: string | null; // S3'teki key
+
+    @Column({ type: 'varchar', nullable: true })
+    profileImageUrl: string | null; // Cloudfront Url'i
+
     @CreateDateColumn()
     createdAt: Date;
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    getProfileImageUrl(): string | null{
+        return this.profileImageUrl || null;
+    }
+
+    hasProfileImage(): boolean{
+        return !!this.profileImageKey;
+    }
 }

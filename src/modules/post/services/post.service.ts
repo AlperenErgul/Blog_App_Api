@@ -33,7 +33,7 @@ export class PostService {
         return post;
     }
 
-    async findAll(query: PaginateQuery) {
+        async findAll(query: PaginateQuery) {
         const result = await paginate(query, this.postEntity, {
             ...POST_PAGINATION_CONFIG,
             relations: ['user']
@@ -41,7 +41,7 @@ export class PostService {
 
         result.data = result.data.map(post => ({
             ...post,
-            user: post.user ? { id: post.user.id, name: post.user.name, email: post.user.email } : null
+            user: post.user ? { id: post.user.id, name: post.user.name, email: post.user.email, profileImageUrl: post.user.getProfileImageUrl(), hasProfileImage: post.user.hasProfileImage() } : null
         })) as unknown as PostEntity[];
 
         return result;

@@ -8,6 +8,7 @@ import * as process from "process";
 import {JwtStrategy} from "./strategies/jwt.strategy";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {UserEntity} from "../../core/modules/database/entities/user.entity";
+import {S3Module} from "../../core/modules/s3/s3.module";
 
 @Module({
     imports: [
@@ -17,7 +18,8 @@ import {UserEntity} from "../../core/modules/database/entities/user.entity";
             secret: process.env.JWT_SECRET,
             signOptions: { expiresIn: '1h' },
         }),
-        TypeOrmModule.forFeature([UserEntity])
+        TypeOrmModule.forFeature([UserEntity]),
+        S3Module
     ],
     controllers: [AuthController],
     providers: [AuthService, JwtStrategy],
